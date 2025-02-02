@@ -17,6 +17,10 @@ class Search extends Component<object, SearchState> {
     };
   }
 
+  componentDidMount() {
+    this.handleSearch();
+  }
+
   handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ searchTerm: event.target.value });
   };
