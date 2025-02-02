@@ -1,6 +1,8 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { SearchState } from '../types';
 import { searchCharacters } from '../services/api';
+import ResultsList from './ResultsList';
+import Spinner from './Spinner';
 
 class Search extends Component<object, SearchState> {
   private readonly LOCAL_STORAGE_KEY = 'searchTerm';
@@ -55,27 +57,11 @@ class Search extends Component<object, SearchState> {
             disabled={isLoading}
             className="search-button"
           >
-            {isLoading ? 'Searching...' : 'Find'}
+            {isLoading ? <Spinner /> : 'Find'}
           </button>
         </div>
 
-        {isLoading ? (
-          <div>Loading...</div>
-        ) : (
-          <div className="results-container">
-            {results.map((character) => (
-              <div key={character.uid} className="result-item">
-                <h3>{character.name}</h3>
-                <div className="character-info">
-                  {character.gender && <p>gender: {character.gender}</p>}
-                  {character.height && <p>height: {character.height}</p>}
-                  {character.weight && <p>weight: {character.weight}</p>}
-                  <p>deceased: {character.deceased ? 'Dead' : 'Alive'}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        <ResultsList results={results} isLoading={isLoading} />
       </div>
     );
   }
