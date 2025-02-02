@@ -10,6 +10,10 @@ body {
   min-height: 100vh;
 }
 
+.app {
+  margin: 20px;
+}
+
 .error-container {
   padding: 20px;
   margin: 20px;
@@ -27,8 +31,21 @@ body {
   margin-top: 10px;
 }
 
+.error-button {
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.error-button:hover {
+  background-color: #c82333;
+}
+
 .search-container {
-  margin: 20px;
+  margin: 20px 0;
   display: flex;
   gap: 10px;
 }
@@ -52,10 +69,6 @@ body {
 .search-button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
-}
-
-.results-container {
-  margin: 20px;
 }
 
 .result-item {

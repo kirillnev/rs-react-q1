@@ -16,7 +16,7 @@ export async function searchCharacters(
     );
 
     if (!response.ok) {
-      throw new Error('Failed to fetch data');
+      throw new Error(`Failed to fetch data ${response.status}`);
     }
 
     const data: ApiResponse = await response.json();
