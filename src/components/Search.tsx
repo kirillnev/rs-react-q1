@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Character, SearchState } from '../types';
+import { SearchState } from '../types';
+import { searchCharacters } from '../services/api';
 
 class Search extends Component<object, SearchState> {
   private readonly LOCAL_STORAGE_KEY = 'searchTerm';
@@ -18,38 +19,22 @@ class Search extends Component<object, SearchState> {
     this.setState({ searchTerm: event.target.value });
   };
 
-  handleSearch = () => {
+  handleSearch = async () => {
     const trimmedSearchTerm = this.state.searchTerm.trim();
     this.setState({ isLoading: true });
 
     localStorage.setItem(this.LOCAL_STORAGE_KEY, trimmedSearchTerm);
 
-    // API-request mock
-    setTimeout(() => {
-      const mockResults: Character[] = [
-        {
-          uid: '1234',
-          name: 'James T. Kirk',
-          gender: 'M',
-          height: 180,
-          weight: 77,
-          deceased: false,
-        },
-        {
-          uid: '5678',
-          name: 'Spock',
-          gender: 'M',
-          height: 185,
-          weight: 80,
-          deceased: false,
-        },
-      ];
-
+    try {
+      const results = await searchCharacters(trimmedSearchTerm);
+      this.setState({ results, isLoading: false });
+    } catch (error) {
       this.setState({
-        results: mockResults,
+        results: [],
         isLoading: false,
       });
-    }, 1000);
+      throw error;
+    }
   };
 
   render() {
@@ -82,9 +67,9 @@ class Search extends Component<object, SearchState> {
               <div key={character.uid} className="result-item">
                 <h3>{character.name}</h3>
                 <div className="character-info">
-                  <p>gender: {character.gender}</p>
-                  <p>height: {character.height}</p>
-                  <p>weight: {character.weight}</p>
+                  {character.gender && <p>gender: {character.gender}</p>}
+                  {character.height && <p>height: {character.height}</p>}
+                  {character.weight && <p>weight: {character.weight}</p>}
                   <p>deceased: {character.deceased ? 'Dead' : 'Alive'}</p>
                 </div>
               </div>

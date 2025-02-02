@@ -12,3 +12,13 @@ export interface SearchState {
   isLoading: boolean;
   results: Character[];
 }
+
+export interface ApiResponse {
+  page: {
+    totalElements: number;
+    totalPages: number;
+    number: number;
+    size: number;
+  };
+  characters: Array<Character>;
+}
