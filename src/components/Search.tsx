@@ -1,50 +1,28 @@
 import { Component } from 'react';
-import { SearchState } from '../types';
-import { searchCharacters } from '../services/api';
-import ResultsList from './ResultsList';
 import Spinner from './Spinner';
 
-class Search extends Component<object, SearchState> {
-  private readonly LOCAL_STORAGE_KEY = 'searchTerm';
+interface Props {
+  searchTerm: string;
+  onSearch: (searchTerm: string) => void;
+  isLoading: boolean;
+}
 
-  constructor(props: object) {
-    super(props);
-
-    this.state = {
-      searchTerm: localStorage.getItem(this.LOCAL_STORAGE_KEY) || '',
-      isLoading: false,
-      results: [],
-    };
-  }
-
-  componentDidMount() {
-    this.handleSearch();
-  }
+class Search extends Component<Props> {
+  state = {
+    searchTerm: this.props.searchTerm,
+  };
 
   handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ searchTerm: event.target.value });
   };
 
-  handleSearch = async () => {
-    const trimmedSearchTerm = this.state.searchTerm.trim();
-    this.setState({ isLoading: true });
-
-    localStorage.setItem(this.LOCAL_STORAGE_KEY, trimmedSearchTerm);
-
-    try {
-      const results = await searchCharacters(trimmedSearchTerm);
-      this.setState({ results, isLoading: false });
-    } catch (error) {
-      this.setState({
-        results: [],
-        isLoading: false,
-      });
-      throw error;
-    }
+  handleSearch = () => {
+    this.props.onSearch(this.state.searchTerm);
   };
 
   render() {
-    const { searchTerm, isLoading, results } = this.state;
+    const { isLoading } = this.props;
+    const { searchTerm } = this.state;
 
     return (
       <div>
@@ -64,8 +42,6 @@ class Search extends Component<object, SearchState> {
             {isLoading ? <Spinner /> : 'Find'}
           </button>
         </div>
-
-        <ResultsList results={results} isLoading={isLoading} />
       </div>
     );
   }
