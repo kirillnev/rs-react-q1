@@ -1,24 +1,24 @@
 export interface Character {
   uid: string;
   name: string;
-  gender: string;
-  height: number;
-  weight: number;
-  deceased: boolean;
-}
-
-export interface SearchState {
-  searchTerm: string;
-  isLoading: boolean;
-  results: Character[];
+  gender?: string;
+  yearOfBirth?: string;
+  placeOfBirth?: string;
 }
 
 export interface ApiResponse {
   page: {
+    pageNumber: number;
+    pageSize: number;
+    numberOfElements: number;
     totalElements: number;
     totalPages: number;
-    number: number;
-    size: number;
+    firstPage: boolean;
+    lastPage: boolean;
   };
-  characters: Array<Character>;
+  characters: Character[];
+}
+
+export interface CharacterDetail {
+  character: Character;
 }

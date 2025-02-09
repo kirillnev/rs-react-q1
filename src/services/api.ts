@@ -1,11 +1,12 @@
-import { Character, ApiResponse } from '../types';
+import { ApiResponse, CharacterDetail } from '../types';
 
-export async function searchCharacters(
+export async function fetchCharacters(
+  page: number,
   searchTerm: string
-): Promise<Character[]> {
+): Promise<ApiResponse> {
   try {
     const response = await fetch(
-      'https://stapi.co/api/v1/rest/character/search',
+      `https://stapi.co/api/v1/rest/character/search?pageSize=10&pageNumber=${page - 1}`,
       {
         method: 'POST',
         headers: {
@@ -16,14 +17,32 @@ export async function searchCharacters(
     );
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch data ${response.status}`);
+      throw new Error(`Failed to fetch data: ${response.status}`);
     }
 
     const data: ApiResponse = await response.json();
-
-    return data.characters;
+    return data;
   } catch (error) {
     console.error('Error searching characters:', error);
+    throw error;
+  }
+}
+
+export async function fetchCharacterDetails(
+  uid: string
+): Promise<CharacterDetail> {
+  try {
+    const response = await fetch(
+      `https://stapi.co/api/v1/rest/character?uid=${encodeURIComponent(uid)}`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch character details: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching character details:', error);
     throw error;
   }
 }

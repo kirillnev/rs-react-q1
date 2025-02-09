@@ -1,50 +1,30 @@
-import { Component } from 'react';
-import Spinner from './Spinner';
+import React, { useState, FormEvent } from 'react';
 
-interface Props {
-  searchTerm: string;
-  onSearch: (searchTerm: string) => void;
-  isLoading: boolean;
+interface SearchProps {
+  onSearch: (query: string) => void;
+  initialQuery: string;
 }
 
-class Search extends Component<Props> {
-  state = {
-    searchTerm: this.props.searchTerm,
+const Search: React.FC<SearchProps> = ({ onSearch, initialQuery }) => {
+  const [inputValue, setInputValue] = useState(initialQuery);
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const trimmedValue = inputValue.trim();
+    onSearch(trimmedValue);
   };
 
-  handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ searchTerm: event.target.value });
-  };
-
-  handleSearch = () => {
-    this.props.onSearch(this.state.searchTerm);
-  };
-
-  render() {
-    const { isLoading } = this.props;
-    const { searchTerm } = this.state;
-
-    return (
-      <div>
-        <div className="search-container">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={this.handleInputChange}
-            placeholder="Search"
-            className="search-input"
-          />
-          <button
-            onClick={this.handleSearch}
-            disabled={isLoading}
-            className="search-button"
-          >
-            {isLoading ? <Spinner /> : 'Find'}
-          </button>
-        </div>
-      </div>
-    );
-  }
-}
+  return (
+    <form onSubmit={handleSubmit} className="search-container">
+      <input
+        type="search"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        placeholder="Search characters..."
+      />
+      <button type="submit">Search</button>
+    </form>
+  );
+};
 
 export default Search;

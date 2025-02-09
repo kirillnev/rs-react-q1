@@ -26,11 +26,9 @@ class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="error-container">
-          <h2 className="error-heading">Something went wrong!</h2>
-          <div className="error-details">
-            {this.state.error && this.state.error.toString()}
-          </div>
+        <div className="error-boundary">
+          <h1>Something went wrong!</h1>
+          <p>{this.state.error?.message}</p>
         </div>
       );
     }
