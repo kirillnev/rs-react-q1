@@ -18,7 +18,7 @@ const DetailPanel: React.FC = () => {
   if (!characterData) return null;
 
   return (
-    <div className="detail-container">
+    <div className="detail-container" data-testid="detail-panel">
       <button className="close-button" onClick={handleClose}>
         Close
       </button>

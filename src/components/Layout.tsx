@@ -33,14 +33,18 @@ const Layout: React.FC = () => {
 
   return (
     <div className="container">
-      <header onClick={handleListClick}>
+      <header>
         <Search onSearch={handleSearch} initialQuery={searchQuery} />
       </header>
       <div className="content">
-        <div className="result-list" onClick={handleListClick}>
+        <div
+          className="result-list"
+          data-testid="result-list"
+          onClick={handleListClick}
+        >
           <ResultList searchQuery={searchQuery} />
         </div>
-        <div className="detail-panel">
+        <div className="detail-panel" data-testid="detail-panel">
           <Outlet />
         </div>
       </div>

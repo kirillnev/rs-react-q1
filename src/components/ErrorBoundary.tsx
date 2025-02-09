@@ -26,7 +26,7 @@ class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="error-boundary">
+        <div className="error-boundary" role="alert" aria-live="assertive">
           <h1>Something went wrong!</h1>
           <p>{this.state.error?.message}</p>
         </div>
