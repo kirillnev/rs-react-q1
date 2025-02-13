@@ -1,24 +1,26 @@
 export interface Character {
-  uid: string;
+  id: number;
   name: string;
-  gender?: string;
-  yearOfBirth?: string;
-  placeOfBirth?: string;
+  status: 'Alive' | 'Dead' | 'unknown';
+  species: string;
+  type: string;
+  gender: 'Female' | 'Male' | 'Genderless' | 'unknown';
+  image: string;
+}
+
+export interface PageData {
+  count: number;
+  pages: number;
+  next: string | null;
+  prev: string | null;
+  current: number;
 }
 
 export interface ApiResponse {
-  page: {
-    pageNumber: number;
-    pageSize: number;
-    numberOfElements: number;
-    totalElements: number;
-    totalPages: number;
-    firstPage: boolean;
-    lastPage: boolean;
-  };
-  characters: Character[];
+  info: PageData;
+  results: Character[];
 }
 
-export interface CharacterDetail {
+/*export interface ApiResponseDetail {
   character: Character;
-}
+}*/

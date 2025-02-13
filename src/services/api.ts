@@ -1,4 +1,10 @@
-import { ApiResponse, CharacterDetail } from '../types';
+import { ApiResponse, Character } from '../types';
+
+const getCurrentPage = (prev: string | null): number => {
+  if (!prev) return 1;
+
+  return Number(new URL(prev).searchParams.get('page')) + 1;
+};
 
 export async function fetchCharacters(
   page: number,
@@ -6,14 +12,7 @@ export async function fetchCharacters(
 ): Promise<ApiResponse> {
   try {
     const response = await fetch(
-      `https://stapi.co/api/v1/rest/character/search?pageSize=10&pageNumber=${page - 1}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `name=${encodeURIComponent(searchTerm)}`,
-      }
+      `https://rickandmortyapi.com/api/character/?page=${page}&name=${encodeURIComponent(searchTerm)}`
     );
 
     if (!response.ok) {
@@ -21,6 +20,7 @@ export async function fetchCharacters(
     }
 
     const data: ApiResponse = await response.json();
+    data.info.current = getCurrentPage(data.info.prev);
     return data;
   } catch (error) {
     console.error('Error searching characters:', error);
@@ -28,19 +28,18 @@ export async function fetchCharacters(
   }
 }
 
-export async function fetchCharacterDetails(
-  uid: string
-): Promise<CharacterDetail> {
+export async function fetchCharacterDetails(uid: string): Promise<Character> {
   try {
     const response = await fetch(
-      `https://stapi.co/api/v1/rest/character?uid=${encodeURIComponent(uid)}`
+      `https://rickandmortyapi.com/api/character/${encodeURIComponent(uid)}`
     );
 
     if (!response.ok) {
       throw new Error(`Failed to fetch character details: ${response.status}`);
     }
 
-    return await response.json();
+    const data: Character = await response.json();
+    return data;
   } catch (error) {
     console.error('Error fetching character details:', error);
     throw error;
