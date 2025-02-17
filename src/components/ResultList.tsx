@@ -2,13 +2,14 @@ import React from 'react';
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { useCharacterSearch } from '../hooks/useCharacterSearch';
 import Spinner from './Spinner';
+import ResultListView from './ResultListView.tsx';
 import Pagination from './Pagination';
 
-interface ResultListProps {
+interface ResultListContainerProps {
   searchQuery: string;
 }
 
-const ResultList: React.FC<ResultListProps> = ({ searchQuery }) => {
+const ResultList: React.FC<ResultListContainerProps> = ({ searchQuery }) => {
   const [searchParams] = useSearchParams();
   const page = parseInt(searchParams.get('page') || '1');
   const navigate = useNavigate();
@@ -19,8 +20,24 @@ const ResultList: React.FC<ResultListProps> = ({ searchQuery }) => {
     searchQuery
   );
 
-  const handleCharacterClick = (uid: string) => {
-    navigate(`${uid}${location.search}`);
+  const handleCharacterClick = (id: number) => {
+    navigate(`${id}${location.search}`);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    if (
+      newPage < 1 ||
+      (charactersData && newPage > charactersData.info.pages)
+    ) {
+      return;
+    }
+    const updatedSearchParams = new URLSearchParams(location.search);
+    updatedSearchParams.set('page', newPage.toString());
+
+    navigate({
+      pathname: location.pathname,
+      search: updatedSearchParams.toString(),
+    });
   };
 
   if (isLoading) {
@@ -31,7 +48,7 @@ const ResultList: React.FC<ResultListProps> = ({ searchQuery }) => {
     return <div className="error">{error}</div>;
   }
 
-  if (!charactersData?.characters.length) {
+  if (!charactersData?.results.length) {
     return (
       <div className="no-results">
         {searchQuery
@@ -42,25 +59,22 @@ const ResultList: React.FC<ResultListProps> = ({ searchQuery }) => {
   }
 
   return (
-    <div className="result-list-container">
-      <ul>
-        {charactersData.characters.map((character) => (
-          <li
-            key={character.uid}
-            onClick={() => handleCharacterClick(character.uid)}
-            className="character-item"
-          >
-            {character.name}
-          </li>
-        ))}
-      </ul>
-      {charactersData.page.totalPages > 1 && (
+    <>
+      <ResultListView
+        characters={charactersData.results}
+        onCharacterClick={handleCharacterClick}
+      />
+      {charactersData.info.pages > 1 && (
         <Pagination
-          total={charactersData.page.totalElements}
-          currentPage={page}
+          pageData={{
+            count: charactersData.info.count,
+            pages: charactersData.info.pages,
+            current: charactersData.info.current,
+          }}
+          onPageChange={handlePageChange}
         />
       )}
-    </div>
+    </>
   );
 };
 

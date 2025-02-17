@@ -1,23 +1,37 @@
+import { describe, test, expect, vi, afterEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import Search from '../Search';
+import Search from '../Search.tsx';
 
-describe('Search Component', () => {
-  it('should save search query to localStorage', () => {
-    const onSearch = vi.fn();
-    render(<Search onSearch={onSearch} initialQuery="" />);
-    const input = screen.getByPlaceholderText(/search characters/i);
-    const button = screen.getByRole('button', { name: /search/i });
+describe('Search', () => {
+  const mockOnSearch = vi.fn();
 
-    fireEvent.change(input, { target: { value: 'Yoda' } });
-    fireEvent.click(button);
-
-    expect(onSearch).toHaveBeenCalledWith('Yoda');
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
-  it('should load search query from localStorage', () => {
-    const onSearch = vi.fn();
-    render(<Search onSearch={onSearch} initialQuery="Darth Vader" />);
+  test('renders input with initialQuery', () => {
+    render(<Search onSearch={mockOnSearch} initialQuery="Rick" />);
 
-    expect(screen.getByDisplayValue('Darth Vader')).toBeInTheDocument();
+    const input = screen.getByRole('searchbox');
+    expect(input).toBeInTheDocument();
+    expect(input).toHaveValue('Rick');
+  });
+
+  test('updates input value on change', () => {
+    render(<Search onSearch={mockOnSearch} initialQuery="" />);
+
+    const input = screen.getByRole('searchbox');
+    fireEvent.change(input, { target: { value: 'Morty' } });
+
+    expect(input).toHaveValue('Morty');
+  });
+
+  test('calls onSearch with trimmed input value on submit', () => {
+    render(<Search onSearch={mockOnSearch} initialQuery="  Jerry " />);
+
+    const form = screen.getByTestId('search-form');
+    fireEvent.submit(form);
+
+    expect(mockOnSearch).toHaveBeenCalledWith('Jerry');
   });
 });

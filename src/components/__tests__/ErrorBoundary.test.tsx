@@ -2,20 +2,16 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import ErrorBoundary from '../../components/ErrorBoundary';
 
-// Создаем компонент, который будет генерировать ошибку
 const ThrowError = () => {
-  throw new Error('Тестовая ошибка');
-  return null;
+  throw new Error('Test error');
 };
 
-// Создаем обычный компонент без ошибок
 const NormalComponent = () => {
-  return <div>Нормальный компонент</div>;
+  return <div>Normal component</div>;
 };
 
 describe('ErrorBoundary Component', () => {
   beforeEach(() => {
-    // Подавляем вывод ошибок в консоль при тестировании
     vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
@@ -26,7 +22,7 @@ describe('ErrorBoundary Component', () => {
       </ErrorBoundary>
     );
 
-    expect(screen.getByText('Нормальный компонент')).toBeInTheDocument();
+    expect(screen.getByText('Normal component')).toBeInTheDocument();
   });
 
   it('renders error message when child component throws', () => {
@@ -39,7 +35,7 @@ describe('ErrorBoundary Component', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
       'Something went wrong!'
     );
-    expect(screen.getByText('Тестовая ошибка')).toBeInTheDocument();
+    expect(screen.getByText('Test error')).toBeInTheDocument();
   });
 
   it('calls componentDidCatch when error occurs', () => {

@@ -15,7 +15,11 @@ const Search: React.FC<SearchProps> = ({ onSearch, initialQuery }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="search-container">
+    <form
+      onSubmit={handleSubmit}
+      className="search-container"
+      data-testid="search-form"
+    >
       <input
         type="search"
         value={inputValue}

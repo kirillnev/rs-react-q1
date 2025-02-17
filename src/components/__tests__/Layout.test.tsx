@@ -1,40 +1,73 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import Layout from '../../components/Layout';
+import { describe, expect, vi, beforeEach, afterEach } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import Layout from '../Layout.tsx';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
-// Мок для useLocalStorage
-vi.mock('../../hooks/useLocalStorage', () => ({
-  default: () => ['', vi.fn()],
+vi.mock('react-router-dom');
+vi.mock('../../hooks/useLocalStorage.ts');
+vi.mock('../LayoutView', () => ({
+  default: ({
+    onListClick,
+    onSearch,
+  }: {
+    onListClick: (e: React.MouseEvent) => void;
+    onSearch: (q: string) => void;
+  }) => (
+    <div>
+      <button
+        data-testid="search-button"
+        onClick={() => onSearch('new search')}
+      >
+        Search
+      </button>
+      <button data-testid="list-container" onClick={onListClick}>
+        List
+      </button>
+    </div>
+  ),
 }));
 
-const renderLayout = () => {
-  return render(
-    <BrowserRouter>
-      <Layout />
-    </BrowserRouter>
-  );
-};
+describe('Layout', () => {
+  const mockNavigate = vi.fn();
+  const mockSetSearchQuery = vi.fn();
 
-describe('Layout Component', () => {
-  it('renders search component', () => {
-    renderLayout();
-
-    const searchInput = screen.getByPlaceholderText('Search characters...');
-    expect(searchInput).toBeInTheDocument();
+  beforeEach(() => {
+    vi.mocked(useLocalStorage).mockReturnValue([
+      'test query',
+      mockSetSearchQuery,
+    ]);
+    vi.mocked(useLocation).mockReturnValue({
+      hash: '',
+      key: '',
+      pathname: '/',
+      state: undefined,
+      search: '?page=1',
+    });
+    vi.mocked(useNavigate).mockReturnValue(mockNavigate);
+    vi.mocked(useSearchParams).mockReturnValue([
+      new URLSearchParams('?page=1'),
+      vi.fn(),
+    ]);
   });
 
-  it('renders results list section', () => {
-    renderLayout();
-
-    const resultsList = screen.getByTestId('result-list');
-    expect(resultsList).toBeInTheDocument();
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
-  it('renders detail panel section', () => {
-    renderLayout();
+  test('updates search query and navigates on search', () => {
+    render(<Layout />);
+    fireEvent.click(screen.getByTestId('search-button'));
+    expect(mockSetSearchQuery).toHaveBeenCalledWith('new search');
+    expect(mockNavigate).toHaveBeenCalledWith('?page=1', { replace: true });
+  });
 
-    const detailPanel = screen.getByTestId('detail-panel');
-    expect(detailPanel).toBeInTheDocument();
+  test('navigates on list click when event target matches currentTarget', () => {
+    render(<Layout />);
+    fireEvent.click(screen.getByTestId('list-container'));
+    expect(mockNavigate).toHaveBeenCalledWith({
+      pathname: '',
+      search: 'page=1',
+    });
   });
 });
