@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Search from './Search';
-import ResultListContainer from './ResultList.tsx';
+import Search from '../Search/Search';
+import ResultListContainer from '../ResultList/ResultList';
 
 interface LayoutViewProps {
   searchQuery: string;

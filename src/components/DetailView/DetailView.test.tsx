@@ -1,6 +1,5 @@
-import { describe, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import DetailView from '../DetailView.tsx';
+import DetailView from './DetailView';
 import { Character } from '../../types';
 
 describe('Detail Component', () => {

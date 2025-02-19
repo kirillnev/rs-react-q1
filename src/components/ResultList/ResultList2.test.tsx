@@ -1,19 +1,18 @@
-import { describe, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render } from '@testing-library/react';
-import ResultList from '../ResultList.tsx';
+import ResultList from './ResultList';
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { useCharacterSearch } from '../../hooks/useCharacterSearch';
 
 vi.mock('react-router-dom');
 vi.mock('../../hooks/useCharacterSearch');
-vi.mock('../Spinner', () => ({
+vi.mock('../Spinner/Spinner', () => ({
   default: () => <div data-testid="spinner">Loading...</div>,
 }));
-vi.mock('../ResultListView', () => ({
+vi.mock('../ResultListView/ResultListView', () => ({
   default: () => null,
 }));
 
-vi.mock('../Pagination', () => ({
+vi.mock('../Pagination/Pagination', () => ({
   default: ({ onPageChange }: { onPageChange: (p: number) => void }) => {
     onPageChange(0);
     return null;

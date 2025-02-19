@@ -1,15 +1,14 @@
-import { describe, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import Detail from '../Detail.tsx';
+import Detail from './Detail.tsx';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { useCharacterDetails } from '../../hooks/useCharacterDetails';
+import { useCharacterDetails } from '../../hooks/useCharacterDetails.ts';
 
 vi.mock('react-router-dom');
 vi.mock('../../hooks/useCharacterDetails');
-vi.mock('../Spinner', () => ({
+vi.mock('../Spinner/Spinner', () => ({
   default: () => <div data-testid="spinner">Loading...</div>,
 }));
-vi.mock('../DetailView', () => ({
+vi.mock('../DetailView/DetailView', () => ({
   default: ({ onClose }: { onClose: () => void }) => {
     onClose();
     return null;

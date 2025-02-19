@@ -1,16 +1,15 @@
-import { afterEach, describe, expect, test, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import LayoutView from '../LayoutView.tsx';
-import ResultListContainer from '../ResultList.tsx';
+import LayoutView from './LayoutView';
+import ResultListContainer from '../ResultList/ResultList';
 
-vi.mock('../Search', () => ({
+vi.mock('../Search/Search', () => ({
   default: vi.fn(({ onSearch }) => {
     onSearch('mocked query');
     return <div data-testid="search-mock" />;
   }),
 }));
 
-vi.mock('../ResultList.tsx', () => ({
+vi.mock('../ResultList/ResultList', () => ({
   default: vi.fn(() => <div data-testid="result-list-mock" />),
 }));
 

@@ -1,12 +1,11 @@
-import { describe, expect, vi, beforeEach, afterEach } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
-import Layout from '../Layout.tsx';
+import Layout from './Layout';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import useLocalStorage from '../../hooks/useLocalStorage';
 
 vi.mock('react-router-dom');
 vi.mock('../../hooks/useLocalStorage.ts');
-vi.mock('../LayoutView', () => ({
+vi.mock('../LayoutView/LayoutView', () => ({
   default: ({
     onListClick,
     onSearch,

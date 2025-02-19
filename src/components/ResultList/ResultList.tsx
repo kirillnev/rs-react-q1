@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
-import { useCharacterSearch } from '../hooks/useCharacterSearch';
-import Spinner from './Spinner';
-import ResultListView from './ResultListView.tsx';
-import Pagination from './Pagination';
+import { useCharacterSearch } from '../../hooks/useCharacterSearch';
+import Spinner from '../Spinner/Spinner';
+import ResultListView from '../ResultListView/ResultListView';
+import Pagination from '../Pagination/Pagination';
 
 interface ResultListContainerProps {
   searchQuery: string;

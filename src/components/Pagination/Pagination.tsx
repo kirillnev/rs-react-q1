@@ -1,5 +1,5 @@
 import React from 'react';
-import { PageData } from '../types.ts';
+import { PageData } from '../../types';
 
 interface PaginationProps {
   pageData: PageData;

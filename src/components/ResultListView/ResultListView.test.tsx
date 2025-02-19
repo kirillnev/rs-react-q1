@@ -1,7 +1,6 @@
-import ResultListView from '../ResultListView.tsx';
-import { describe, expect, test, vi } from 'vitest';
+import ResultListView from './ResultListView';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { Character } from '../../types.ts';
+import { Character } from '../../types';
 
 describe('ResultList Component', () => {
   const mockCharacters: Character[] = [

@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import NotFound from '../../components/NotFound';
-import { describe } from 'vitest';
+import NotFound from './NotFound';
 
 describe('NotFound component', () => {
   test('consist of link to the main page', () => {
