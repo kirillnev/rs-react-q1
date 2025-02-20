@@ -1,9 +1,11 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import App from './App.tsx';
-import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary.tsx';
+import App from './App';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import { BrowserRouter } from 'react-router-dom';
+import { store } from './store';
+import { Provider } from 'react-redux';
 
 const rootElement = document.getElementById('root');
 
@@ -14,9 +16,11 @@ if (!rootElement) {
 createRoot(rootElement).render(
   <StrictMode>
     <ErrorBoundary>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Provider>
     </ErrorBoundary>
   </StrictMode>
 );

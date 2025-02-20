@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
-import { useCharacterSearch } from '../../hooks/useCharacterSearch';
+import { useGetCharactersQuery } from '../../slices/apiSlice';
 import Spinner from '../Spinner/Spinner';
 import ResultListView from '../ResultListView/ResultListView';
 import Pagination from '../Pagination/Pagination';
@@ -15,10 +15,11 @@ const ResultList: React.FC<ResultListContainerProps> = ({ searchQuery }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { charactersData, isLoading, error } = useCharacterSearch(
-    page,
-    searchQuery
-  );
+  const {
+    data: charactersData,
+    isFetching,
+    error,
+  } = useGetCharactersQuery({ page, searchQuery });
 
   const handleCharacterClick = (id: number) => {
     navigate(`${id}${location.search}`);
@@ -40,12 +41,12 @@ const ResultList: React.FC<ResultListContainerProps> = ({ searchQuery }) => {
     });
   };
 
-  if (isLoading) {
+  if (isFetching) {
     return <Spinner />;
   }
 
   if (error) {
-    return <div className="error">{error}</div>;
+    return <div className="error">Something went wrong.</div>;
   }
 
   if (!charactersData?.results.length) {
@@ -69,7 +70,7 @@ const ResultList: React.FC<ResultListContainerProps> = ({ searchQuery }) => {
           pageData={{
             count: charactersData.info.count,
             pages: charactersData.info.pages,
-            current: charactersData.info.current,
+            current: page,
           }}
           onPageChange={handlePageChange}
         />

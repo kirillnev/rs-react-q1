@@ -1,26 +1,30 @@
 import React from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { useCharacterDetails } from '../../hooks/useCharacterDetails';
+import { useGetCharacterDetailsQuery } from '../../slices/apiSlice';
 import Spinner from '../Spinner/Spinner';
 import DetailView from '../DetailView/DetailView';
 
 const Detail: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id = '' } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { character, isLoading, error } = useCharacterDetails(id);
+  const {
+    data: character,
+    error,
+    isFetching,
+  } = useGetCharacterDetailsQuery(id);
   const location = useLocation();
 
   const handleClose = () => {
     navigate(`/${location.search}`);
   };
 
-  if (isLoading) {
+  if (isFetching) {
     return <Spinner />;
   }
   if (error) {
     return (
       <div className="error" data-testid="error">
-        {error}
+        {error.toString()}
       </div>
     );
   }
