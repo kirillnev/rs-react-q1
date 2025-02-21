@@ -28,6 +28,41 @@ header {
   overflow-y: auto;
 }
 
+.character-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.character-item {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+.character-item:hover {
+  background-color: #efefef;
+}
+
+.character-item input {
+  margin-right: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.character-item button {
+  position: absolute;
+  left: 30px;
+  top: 0;
+  width: calc(100% - 30px);
+  height: 100%;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+}
+
 .detail-panel {
   flex: 1;
   padding: 20px;
@@ -92,23 +127,6 @@ header {
 .pagination-info {
   font-size: 14px;
   color: #666;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-li {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-li:hover {
-  background-color: #f8f9fa;
 }
 
 .detail-container {
