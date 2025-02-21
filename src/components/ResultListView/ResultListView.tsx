@@ -14,8 +14,8 @@ const ResultListView: React.FC<ResultListProps> = ({
   onCharacterClick,
 }) => {
   const dispatch = useDispatch();
-  const selectedIds = useSelector(
-    (state: RootState) => state.selected.selectedIds
+  const selectedCharacters = useSelector(
+    (state: RootState) => state.selected.selectedCharacters
   );
 
   return (
@@ -24,8 +24,12 @@ const ResultListView: React.FC<ResultListProps> = ({
         <li key={character.id} className="character-item">
           <input
             type="checkbox"
-            checked={!!selectedIds[character.id]}
-            onChange={() => dispatch(toggleItem(character.id))}
+            checked={
+              selectedCharacters.filter(
+                (item: Character) => item.id === character.id
+              ).length > 0
+            }
+            onChange={() => dispatch(toggleItem(character))}
           />
           <button onClick={() => onCharacterClick(character.id)}>
             {character.name}

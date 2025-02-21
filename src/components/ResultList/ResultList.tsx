@@ -4,6 +4,7 @@ import { useGetCharactersQuery } from '../../slices/apiSlice';
 import Spinner from '../Spinner/Spinner';
 import ResultListView from '../ResultListView/ResultListView';
 import Pagination from '../Pagination/Pagination';
+import Flyout from '../Flyout/Flyout';
 
 interface ResultListContainerProps {
   searchQuery: string;
@@ -61,6 +62,7 @@ const ResultList: React.FC<ResultListContainerProps> = ({ searchQuery }) => {
 
   return (
     <>
+      <Flyout />
       <ResultListView
         characters={charactersData.results}
         onCharacterClick={handleCharacterClick}

@@ -1,22 +1,30 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Character } from '../types.ts';
 
 interface SelectedState {
-  selectedIds: { [id: number]: boolean };
+  selectedCharacters: Character[];
 }
 
 const initialState: SelectedState = {
-  selectedIds: {},
+  selectedCharacters: [],
 };
 
 const selectedSlice = createSlice({
   name: 'selected',
   initialState,
   reducers: {
-    toggleItem: (state, action: PayloadAction<number>) => {
-      state.selectedIds[action.payload] = !state.selectedIds[action.payload];
+    toggleItem: (state, action: PayloadAction<Character>) => {
+      const character = action.payload;
+      if (state.selectedCharacters[character.id]) {
+        state.selectedCharacters = state.selectedCharacters.filter(
+          (item: Character) => item.id !== character.id
+        );
+      } else {
+        state.selectedCharacters.push(character);
+      }
     },
     unselectAll: (state) => {
-      state.selectedIds = {};
+      state.selectedCharacters = [];
     },
   },
 });
