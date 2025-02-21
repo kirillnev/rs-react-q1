@@ -200,3 +200,18 @@ header {
   margin: 8px 0;
   line-height: 1.5;
 }
+
+.flyout {
+  position: fixed;
+  z-index: 10;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #f5f5f5;
+  border-top: 1px solid #ccc;
+  padding: 10px;
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+  align-items: center;
+}
