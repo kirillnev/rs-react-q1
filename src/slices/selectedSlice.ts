@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Character } from '../types.ts';
+import { Character } from '../types';
 
 interface SelectedState {
   selectedCharacters: Character[];
@@ -15,9 +15,13 @@ const selectedSlice = createSlice({
   reducers: {
     toggleItem: (state, action: PayloadAction<Character>) => {
       const character = action.payload;
-      if (state.selectedCharacters[character.id]) {
+      const exists = state.selectedCharacters.some(
+        (item) => item.id === character.id
+      );
+
+      if (exists) {
         state.selectedCharacters = state.selectedCharacters.filter(
-          (item: Character) => item.id !== character.id
+          (item) => item.id !== character.id
         );
       } else {
         state.selectedCharacters.push(character);

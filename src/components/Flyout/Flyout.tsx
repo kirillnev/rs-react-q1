@@ -1,33 +1,43 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import { unselectAll } from '../../slices/selectedSlice.ts';
+import { unselectAll } from '../../slices/selectedSlice';
+import { generateCsvUrl } from './helper';
 
 const Flyout: React.FC = () => {
   const { selectedCharacters } = useSelector(
     (state: RootState) => state.selected
   );
   const dispatch = useDispatch();
+  const [csvUrl, setCsvUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const blobUrl = generateCsvUrl(selectedCharacters);
+
+    setCsvUrl(blobUrl);
+
+    return () => {
+      URL.revokeObjectURL(blobUrl);
+    };
+  }, [selectedCharacters]);
+
+  const handleUnselectAll = () => {
+    dispatch(unselectAll());
+  };
 
   if (selectedCharacters.length === 0) {
     return null;
   }
 
-  const handleDownload = () => {
-    console.log(selectedCharacters);
-  };
-
   return (
     <div className="flyout">
       <span>{`${selectedCharacters.length} items selected`}</span>
-      <button
-        onClick={() => {
-          dispatch(unselectAll());
-        }}
-      >
-        {`Unselect all`}
-      </button>
-      <button onClick={handleDownload}>{`Download all`}</button>
+      <button onClick={handleUnselectAll}>Unselect all</button>
+      {csvUrl && (
+        <a href={csvUrl} download="selected_characters.csv">
+          <button>Download all</button>
+        </a>
+      )}
     </div>
   );
 };
