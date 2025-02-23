@@ -1,8 +1,8 @@
 import React from 'react';
-import { Character } from '../../types';
+import { Character } from '../../types.ts';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store';
-import { toggleItem } from '../../slices/selectedSlice';
+import { RootState } from '../../store.ts';
+import { toggleItem } from '../../slices/selectedSlice.ts';
 
 interface ResultListProps {
   characters: Character[];

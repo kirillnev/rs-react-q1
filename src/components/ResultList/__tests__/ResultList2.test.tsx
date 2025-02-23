@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import ResultList from './ResultList';
+import ResultList from '../ResultList.tsx';
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { useCharacterSearch } from '../../hooks/useCharacterSearch';
 

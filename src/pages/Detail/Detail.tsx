@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useGetCharacterDetailsQuery } from '../../slices/apiSlice';
-import Spinner from '../Spinner/Spinner';
-import DetailView from '../DetailView/DetailView';
+import Spinner from '../../components/Spinner';
+import DetailView from './DetailView';
 
 const Detail: React.FC = () => {
   const { id = '' } = useParams<{ id: string }>();

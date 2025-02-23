@@ -1,8 +1,8 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Layout from './components/Layout/Layout.tsx';
-import NotFound from './components/NotFound/NotFound.tsx';
-import Detail from './components/Detail/Detail.tsx';
+import Layout from './components/Layout';
+import NotFound from './pages/NotFound';
+import Detail from './pages/Detail';
 
 const App: React.FC = () => {
   return (

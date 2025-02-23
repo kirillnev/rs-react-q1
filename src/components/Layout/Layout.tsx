@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import useLocalStorage from '../../hooks/useLocalStorage';
-import LayoutView from '../LayoutView/LayoutView';
+import LayoutView from './LayoutView';
 
 const Layout: React.FC = () => {
   const [searchQuery, setSearchQuery] = useLocalStorage<string>(

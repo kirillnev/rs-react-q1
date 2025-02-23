@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import Search from './Search';
+import Search from '../Search.tsx';
 
 describe('Search', () => {
   const mockOnSearch = vi.fn();

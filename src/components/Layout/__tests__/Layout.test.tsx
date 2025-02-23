@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import Layout from './Layout';
+import Layout from '../Layout.tsx';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
-import useLocalStorage from '../../hooks/useLocalStorage';
+import useLocalStorage from '../../../hooks/useLocalStorage.ts';
 
 vi.mock('react-router-dom');
 vi.mock('../../hooks/useLocalStorage.ts');

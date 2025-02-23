@@ -1,6 +1,6 @@
-import ResultListView from './ResultListView';
+import ResultListView from '../ResultListView.tsx';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { Character } from '../../types';
+import { Character } from '../../../types.ts';
 
 describe('ResultList Component', () => {
   const mockCharacters: Character[] = [

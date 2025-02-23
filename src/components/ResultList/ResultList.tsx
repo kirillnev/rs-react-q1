@@ -1,10 +1,10 @@
 import React from 'react';
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { useGetCharactersQuery } from '../../slices/apiSlice';
-import Spinner from '../Spinner/Spinner';
-import ResultListView from '../ResultListView/ResultListView';
-import Pagination from '../Pagination/Pagination';
-import Flyout from '../Flyout/Flyout';
+import Spinner from '../Spinner';
+import ResultListView from './ResultListView';
+import Pagination from '../Pagination';
+import Flyout from '../Flyout';
 
 interface ResultListContainerProps {
   searchQuery: string;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Search from '../Search/Search';
-import ResultListContainer from '../ResultList/ResultList';
+import Search from '../Search';
+import ResultList from '../ResultList';
 
 interface LayoutViewProps {
   searchQuery: string;
@@ -24,7 +24,7 @@ const LayoutView: React.FC<LayoutViewProps> = ({
         data-testid="result-list"
         onClick={onListClick}
       >
-        <ResultListContainer searchQuery={searchQuery} />
+        <ResultList searchQuery={searchQuery} />
       </div>
       <div className="detail-panel" data-testid="detail-panel">
         <Outlet />

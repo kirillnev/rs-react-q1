@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import ResultList from './ResultList';
+import ResultList from '../ResultList.tsx';
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { useCharacterSearch } from '../../hooks/useCharacterSearch';
-import { Character } from '../../types';
+import { Character } from '../../../types.ts';
 
 vi.mock('react-router-dom');
 vi.mock('../../hooks/useCharacterSearch');

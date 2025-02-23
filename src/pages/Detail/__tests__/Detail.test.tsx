@@ -1,10 +1,9 @@
 import { render, screen } from '@testing-library/react';
-import Detail from './Detail.tsx';
+import Detail from '../Detail.tsx';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { useCharacterDetails } from '../../hooks/useCharacterDetails.ts';
+import { useGetCharacterDetailsQuery } from '../../../slices/apiSlice.ts';
 
 vi.mock('react-router-dom');
-vi.mock('../../hooks/useCharacterDetails');
 vi.mock('../Spinner/Spinner', () => ({
   default: () => <div data-testid="spinner">Loading...</div>,
 }));
@@ -33,7 +32,7 @@ describe('Detail', () => {
   });
 
   test('displays a spinner while loading', () => {
-    vi.mocked(useCharacterDetails).mockReturnValue({
+    vi.mocked(useGetCharacterDetailsQuery).mockReturnValue({
       character: null,
       isLoading: true,
       error: '',
@@ -43,7 +42,7 @@ describe('Detail', () => {
   });
 
   test('displays an error message in case of an error.', () => {
-    vi.mocked(useCharacterDetails).mockReturnValue({
+    vi.mocked(useGetCharacterDetailsQuery).mockReturnValue({
       character: null,
       isLoading: false,
       error: 'Some error',
@@ -54,7 +53,7 @@ describe('Detail', () => {
   });
 
   test('Return null if characters list is empty', () => {
-    vi.mocked(useCharacterDetails).mockReturnValue({
+    vi.mocked(useGetCharacterDetailsQuery).mockReturnValue({
       character: null,
       isLoading: false,
       error: '',
@@ -68,7 +67,7 @@ describe('Detail', () => {
     const mockNavigate = vi.fn();
     vi.mocked(useNavigate).mockReturnValue(mockNavigate);
 
-    vi.mocked(useCharacterDetails).mockReturnValue({
+    vi.mocked(useGetCharacterDetailsQuery).mockReturnValue({
       character: { id: 1, name: 'Test Character' },
       isLoading: false,
       error: '',

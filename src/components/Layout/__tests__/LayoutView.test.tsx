@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
-import LayoutView from './LayoutView';
-import ResultListContainer from '../ResultList/ResultList';
+import LayoutView from '../LayoutView.tsx';
+import ResultListContainer from '../../ResultList/ResultList.tsx';
 
 vi.mock('../Search/Search', () => ({
   default: vi.fn(({ onSearch }) => {
