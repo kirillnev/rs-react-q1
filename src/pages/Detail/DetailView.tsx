@@ -1,5 +1,5 @@
 import React from 'react';
-import { Character } from '../../types.ts';
+import { Character } from '../../types';
 
 interface DetailPropsType {
   character: Character;
@@ -7,18 +7,20 @@ interface DetailPropsType {
 }
 
 const DetailView: React.FC<DetailPropsType> = ({ character, onClose }) => {
+  const { name, species, gender, image, status, type } = character;
+
   return (
     <div className="detail-container">
       <button className="close-button" onClick={onClose}>
         Close
       </button>
       <div className="character-details">
-        <h2>{character.name}</h2>
-        {character.species && <p>Species: {character.species}</p>}
-        {character.type && <p>Type: {character.type}</p>}
-        {character.gender && <p>Gender: {character.gender}</p>}
-        {character.status && <p>Status: {character.status}</p>}
-        {character.image && <img src={character.image} alt={character.name} />}
+        <h2>{name}</h2>
+        {species && <p>Species: {species}</p>}
+        {type && <p>Type: {type}</p>}
+        {gender && <p>Gender: {gender}</p>}
+        {status && <p>Status: {status}</p>}
+        {image && <img src={image} alt={name} />}
       </div>
     </div>
   );

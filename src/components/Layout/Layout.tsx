@@ -4,10 +4,7 @@ import useLocalStorage from '../../hooks/useLocalStorage';
 import LayoutView from './LayoutView';
 
 const Layout: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useLocalStorage<string>(
-    'searchQuery',
-    ''
-  );
+  const [searchQuery, setSearchQuery] = useLocalStorage('searchQuery', '');
   const navigate = useNavigate();
 
   const handleSearch = (query: string) => {

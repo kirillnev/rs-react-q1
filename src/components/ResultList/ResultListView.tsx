@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store.ts';
 import { toggleItem } from '../../slices/selectedSlice';
 
-interface ResultListProps {
+interface ResultListViewProps {
   characters: Character[];
   onCharacterClick: (id: number) => void;
 }
 
-const ResultListView: React.FC<ResultListProps> = ({
+const ResultListView: React.FC<ResultListViewProps> = ({
   characters,
   onCharacterClick,
 }) => {

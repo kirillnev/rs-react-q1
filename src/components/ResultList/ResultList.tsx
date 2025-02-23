@@ -7,11 +7,11 @@ import Pagination from '../Pagination';
 import Flyout from '../Flyout';
 import { onPageChange } from './helper';
 
-interface ResultListContainerProps {
+interface ResultListProps {
   searchQuery: string;
 }
 
-const ResultList: React.FC<ResultListContainerProps> = ({ searchQuery }) => {
+const ResultList: React.FC<ResultListProps> = ({ searchQuery }) => {
   const [searchParams] = useSearchParams();
   const page = Number(searchParams.get('page')) || 1;
   const navigate = useNavigate();
