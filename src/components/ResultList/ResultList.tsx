@@ -5,6 +5,7 @@ import Spinner from '../Spinner';
 import ResultListView from './ResultListView';
 import Pagination from '../Pagination';
 import Flyout from '../Flyout';
+import { onPageChange } from './helper';
 
 interface ResultListContainerProps {
   searchQuery: string;
@@ -12,7 +13,7 @@ interface ResultListContainerProps {
 
 const ResultList: React.FC<ResultListContainerProps> = ({ searchQuery }) => {
   const [searchParams] = useSearchParams();
-  const page = parseInt(searchParams.get('page') || '1');
+  const page = Number(searchParams.get('page')) || 1;
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -26,39 +27,17 @@ const ResultList: React.FC<ResultListContainerProps> = ({ searchQuery }) => {
     navigate(`${id}${location.search}`);
   };
 
-  const handlePageChange = (newPage: number) => {
-    if (
-      newPage < 1 ||
-      (charactersData && newPage > charactersData.info.pages)
-    ) {
-      return;
-    }
-    const updatedSearchParams = new URLSearchParams(location.search);
-    updatedSearchParams.set('page', newPage.toString());
-
-    navigate({
-      pathname: location.pathname,
-      search: updatedSearchParams.toString(),
-    });
-  };
-
   if (isFetching) {
     return <Spinner />;
   }
 
-  if (error) {
+  if (error || !charactersData) {
     return <div className="error">Something went wrong.</div>;
   }
 
-  if (!charactersData?.results.length) {
-    return (
-      <div className="no-results">
-        {searchQuery
-          ? `No results found for "${searchQuery}"`
-          : 'Please enter a search query'}
-      </div>
-    );
-  }
+  const handlePageChange = (newPage: number) => {
+    onPageChange(newPage, charactersData, location, navigate);
+  };
 
   return (
     <>

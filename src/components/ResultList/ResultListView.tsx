@@ -2,7 +2,7 @@ import React from 'react';
 import { Character } from '../../types.ts';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store.ts';
-import { toggleItem } from '../../slices/selectedSlice.ts';
+import { toggleItem } from '../../slices/selectedSlice';
 
 interface ResultListProps {
   characters: Character[];
@@ -17,6 +17,10 @@ const ResultListView: React.FC<ResultListProps> = ({
   const selectedCharacters = useSelector(
     (state: RootState) => state.selected.selectedCharacters
   );
+
+  if (!characters.length) {
+    return <div className="no-results">No results found</div>;
+  }
 
   return (
     <ul className="character-list">
