@@ -21,15 +21,9 @@ const Detail: React.FC = () => {
   if (isFetching) {
     return <Spinner />;
   }
-  if (error) {
-    return (
-      <div className="error" data-testid="error">
-        {error.toString()}
-      </div>
-    );
-  }
-  if (!character) {
-    return <div>No character data available</div>;
+
+  if (error || !character) {
+    return <div className="error">Something went wrong.</div>;
   }
 
   return <DetailView character={character} onClose={handleClose} />;
