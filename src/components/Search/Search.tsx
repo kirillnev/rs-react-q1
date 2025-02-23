@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, ChangeEvent } from 'react';
 
 interface SearchProps {
   onSearch: (query: string) => void;
@@ -14,6 +14,10 @@ const Search: React.FC<SearchProps> = ({ onSearch, initialQuery }) => {
     onSearch(trimmedValue);
   };
 
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -23,7 +27,7 @@ const Search: React.FC<SearchProps> = ({ onSearch, initialQuery }) => {
       <input
         type="search"
         value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
+        onChange={handleInputChange}
         placeholder="Search characters..."
       />
       <button type="submit">Search</button>
