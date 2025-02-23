@@ -1,27 +1,18 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import Layout from '../Layout.tsx';
-import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
-import useLocalStorage from '../../../hooks/useLocalStorage.ts';
+import Layout from '../Layout';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import useLocalStorage from '../../../hooks/useLocalStorage';
 
 vi.mock('react-router-dom');
-vi.mock('../../hooks/useLocalStorage.ts');
-vi.mock('../LayoutView/LayoutView', () => ({
-  default: ({
-    onListClick,
-    onSearch,
-  }: {
-    onListClick: (e: React.MouseEvent) => void;
-    onSearch: (q: string) => void;
-  }) => (
+vi.mock('../../../hooks/useLocalStorage');
+vi.mock('../LayoutView', () => ({
+  default: ({ onSearch }: { onSearch: (q: string) => void }) => (
     <div>
       <button
         data-testid="search-button"
         onClick={() => onSearch('new search')}
       >
         Search
-      </button>
-      <button data-testid="list-container" onClick={onListClick}>
-        List
       </button>
     </div>
   ),
@@ -36,13 +27,7 @@ describe('Layout', () => {
       'test query',
       mockSetSearchQuery,
     ]);
-    vi.mocked(useLocation).mockReturnValue({
-      hash: '',
-      key: '',
-      pathname: '/',
-      state: undefined,
-      search: '?page=1',
-    });
+
     vi.mocked(useNavigate).mockReturnValue(mockNavigate);
     vi.mocked(useSearchParams).mockReturnValue([
       new URLSearchParams('?page=1'),
@@ -59,14 +44,5 @@ describe('Layout', () => {
     fireEvent.click(screen.getByTestId('search-button'));
     expect(mockSetSearchQuery).toHaveBeenCalledWith('new search');
     expect(mockNavigate).toHaveBeenCalledWith('?page=1', { replace: true });
-  });
-
-  test('navigates on list click when event target matches currentTarget', () => {
-    render(<Layout />);
-    fireEvent.click(screen.getByTestId('list-container'));
-    expect(mockNavigate).toHaveBeenCalledWith({
-      pathname: '',
-      search: 'page=1',
-    });
   });
 });

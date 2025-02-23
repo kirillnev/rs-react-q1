@@ -2,8 +2,8 @@ import React from 'react';
 
 const Spinner: React.FC = () => {
   return (
-    <div className="spinner" data-testid="spinner-container">
-      <div className="spinner-inner" data-testid="spinner-inner"></div>
+    <div className="spinner" data-testid="spinner">
+      <div className="spinner-inner"></div>
     </div>
   );
 };

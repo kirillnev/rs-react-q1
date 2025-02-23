@@ -1,7 +1,7 @@
 import React from 'react';
-import { Character } from '../../types.ts';
+import { Character } from '../../types';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store.ts';
+import { RootState } from '../../store';
 import { toggleItem } from '../../slices/selectedSlice';
 
 interface ResultListViewProps {

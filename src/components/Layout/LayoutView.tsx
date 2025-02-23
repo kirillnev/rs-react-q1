@@ -14,7 +14,10 @@ const LayoutView: React.FC<LayoutViewProps> = ({ searchQuery, onSearch }) => {
   const { theme } = useTheme();
 
   return (
-    <div className={`container ${theme === 'dark' && 'dark'}`}>
+    <div
+      className={`container ${theme === 'dark' && 'dark'}`}
+      data-testid="layout-container"
+    >
       <header>
         <Search onSearch={onSearch} initialQuery={searchQuery} />
         <ThemeToggle />

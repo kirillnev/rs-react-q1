@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import Pagination from '../Pagination.tsx';
-import { PageData } from '../../../types.ts';
+import Pagination from '../Pagination';
+import { PageData } from '../../../types';
 
 describe('Pagination Component', () => {
   test('renders correctly with given page data', () => {

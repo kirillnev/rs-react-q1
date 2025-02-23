@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import DetailView from '../DetailView.tsx';
-import { Character } from '../../../types.ts';
+import DetailView from '../DetailView';
+import { Character } from '../../../types';
 
 describe('Detail Component', () => {
   const mockCharacter: Character = {

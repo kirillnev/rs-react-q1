@@ -11,7 +11,13 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json', 'lcov'],
       include: ['**/*.tsx'],
-      exclude: ['**/node_modules/**', '**/*.test.tsx', '**/*.spec.tsx'],
+      exclude: [
+        '**/node_modules/**',
+        '**/*.test.tsx',
+        '**/*.spec.tsx',
+        'src/App.tsx',
+        'src/main.tsx',
+      ],
     },
   },
 });

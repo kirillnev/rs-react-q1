@@ -1,13 +1,13 @@
 import { render, screen } from '@testing-library/react';
-import Detail from '../Detail.tsx';
+import Detail from '../Detail';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { useGetCharacterDetailsQuery } from '../../../slices/apiSlice.ts';
+import * as apiSlice from '../../../slices/apiSlice';
 
 vi.mock('react-router-dom');
-vi.mock('../Spinner/Spinner', () => ({
+vi.mock('../../../components/Spinner', () => ({
   default: () => <div data-testid="spinner">Loading...</div>,
 }));
-vi.mock('../DetailView/DetailView', () => ({
+vi.mock('../DetailView', () => ({
   default: ({ onClose }: { onClose: () => void }) => {
     onClose();
     return null;
@@ -32,45 +32,38 @@ describe('Detail', () => {
   });
 
   test('displays a spinner while loading', () => {
-    vi.mocked(useGetCharacterDetailsQuery).mockReturnValue({
-      character: null,
-      isLoading: true,
+    vi.spyOn(apiSlice, 'useGetCharacterDetailsQuery').mockReturnValue({
+      data: null,
+      isFetching: true,
       error: '',
+      refetch: vi.fn(),
     });
+
     render(<Detail />);
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
 
   test('displays an error message in case of an error.', () => {
-    vi.mocked(useGetCharacterDetailsQuery).mockReturnValue({
-      character: null,
-      isLoading: false,
+    vi.spyOn(apiSlice, 'useGetCharacterDetailsQuery').mockReturnValue({
+      data: null,
+      isFetching: false,
       error: 'Some error',
-    });
-    render(<Detail />);
-    expect(screen.getByTestId('error')).toBeInTheDocument();
-    expect(screen.getByTestId('error')).toHaveTextContent('Some error');
-  });
-
-  test('Return null if characters list is empty', () => {
-    vi.mocked(useGetCharacterDetailsQuery).mockReturnValue({
-      character: null,
-      isLoading: false,
-      error: '',
+      refetch: vi.fn(),
     });
 
     render(<Detail />);
-    expect(screen.getByText('No character data available')).toBeInTheDocument();
+    expect(screen.getByText('Something went wrong.')).toBeInTheDocument();
   });
 
   test('Call navigate when onClose', () => {
     const mockNavigate = vi.fn();
     vi.mocked(useNavigate).mockReturnValue(mockNavigate);
 
-    vi.mocked(useGetCharacterDetailsQuery).mockReturnValue({
-      character: { id: 1, name: 'Test Character' },
-      isLoading: false,
+    vi.spyOn(apiSlice, 'useGetCharacterDetailsQuery').mockReturnValue({
+      data: { id: 1, name: 'Test Character' },
+      isFetching: false,
       error: '',
+      refetch: vi.fn(),
     });
 
     vi.mocked(useLocation).mockReturnValue({

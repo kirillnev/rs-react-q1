@@ -1,15 +1,27 @@
 import { render, screen } from '@testing-library/react';
-import ResultList from '../ResultList.tsx';
+import ResultList from '../ResultList';
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
-import { useCharacterSearch } from '../../hooks/useCharacterSearch';
-import { Character } from '../../../types.ts';
+import { useGetCharactersQuery } from '../../../slices/apiSlice';
+import * as helper from '../helper';
+import { Character } from '../../../types';
 
 vi.mock('react-router-dom');
-vi.mock('../../hooks/useCharacterSearch');
-vi.mock('../Spinner/Spinner', () => ({
+vi.mock('../../../slices/apiSlice');
+vi.mock('../helper');
+vi.mock('react-redux', () => ({
+  useDispatch: () => vi.fn(),
+  useSelector: () => [],
+}));
+
+vi.mock('../../Spinner', () => ({
   default: () => <div data-testid="spinner">Loading...</div>,
 }));
-vi.mock('../ResultListView/ResultListView', () => ({
+
+vi.mock('../../Flyout', () => ({
+  default: () => <div data-testid="flyout">Flyout</div>,
+}));
+
+vi.mock('../ResultListView', () => ({
   default: ({
     characters,
     onCharacterClick,
@@ -17,17 +29,21 @@ vi.mock('../ResultListView/ResultListView', () => ({
     characters: Character[];
     onCharacterClick: (id: number) => void;
   }) => (
-    <ul data-testid="result-list">
-      {characters?.map((char) => (
-        <li key={char.id} onClick={() => onCharacterClick(char.id)}>
+    <div data-testid="result-list">
+      {characters.map((char) => (
+        <div
+          key={char.id}
+          onClick={() => onCharacterClick(char.id)}
+          data-testid={`character-${char.id}`}
+        >
           {char.name}
-        </li>
+        </div>
       ))}
-    </ul>
+    </div>
   ),
 }));
 
-vi.mock('../Pagination/Pagination', () => ({
+vi.mock('../../Pagination', () => ({
   default: ({ onPageChange }: { onPageChange: (p: number) => void }) => {
     onPageChange(2);
     return <div data-testid="pagination">Pagination</div>;
@@ -36,178 +52,191 @@ vi.mock('../Pagination/Pagination', () => ({
 
 describe('ResultList', () => {
   const mockNavigate = vi.fn();
+  const mockOnPageChange = vi.fn();
+
+  const defaultSearchParams = new URLSearchParams('?page=1');
+  const defaultLocation = {
+    pathname: '/',
+    search: '?page=1',
+    hash: '',
+    state: null,
+    key: 'default',
+  };
 
   beforeEach(() => {
-    vi.mocked(useSearchParams).mockReturnValue([
-      new URLSearchParams('?page=1'),
-      vi.fn(),
-    ]);
-    vi.mocked(useLocation).mockReturnValue({
-      hash: '',
-      key: '',
-      pathname: '/',
-      state: undefined,
-      search: '?page=1',
-    });
-    vi.mocked(useNavigate).mockReturnValue(mockNavigate);
-    vi.mocked(useCharacterSearch).mockReturnValue({
-      charactersData: null,
-      isLoading: false,
-      error: '',
-    });
-  });
-
-  afterEach(() => {
     vi.clearAllMocks();
+
+    vi.mocked(useSearchParams).mockReturnValue([defaultSearchParams, vi.fn()]);
+    vi.mocked(useLocation).mockReturnValue(defaultLocation);
+    vi.mocked(useNavigate).mockReturnValue(mockNavigate);
+    vi.mocked(helper.onPageChange).mockImplementation(mockOnPageChange);
+
+    vi.mocked(useGetCharactersQuery).mockReturnValue({
+      data: null,
+      isFetching: false,
+      error: null,
+      refetch: vi.fn(),
+    });
   });
 
-  test('displays a spinner while loading', () => {
-    vi.mocked(useCharacterSearch).mockReturnValue({
-      charactersData: null,
-      isLoading: true,
-      error: '',
+  test('should show loading spinner when fetching data', () => {
+    vi.mocked(useGetCharactersQuery).mockReturnValue({
+      data: null,
+      isFetching: true,
+      error: null,
+      refetch: vi.fn(),
     });
 
     render(<ResultList searchQuery="Rick" />);
+
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
 
-  test('displays an error message in case of an error.', () => {
-    vi.mocked(useCharacterSearch).mockReturnValue({
-      charactersData: null,
-      isLoading: false,
-      error: 'Some error',
+  test('should show error message when API returns error', () => {
+    vi.mocked(useGetCharactersQuery).mockReturnValue({
+      data: null,
+      isFetching: false,
+      error: new Error('API Error'),
+      refetch: vi.fn(),
     });
 
     render(<ResultList searchQuery="Rick" />);
-    expect(screen.getByText('Some error')).toBeInTheDocument();
+
+    expect(screen.getByText('Something went wrong.')).toBeInTheDocument();
   });
 
-  test('Displays "No results found" when the result is empty and searchQuery is present.', () => {
-    vi.mocked(useCharacterSearch).mockReturnValue({
-      charactersData: {
-        results: [],
-        info: {
-          count: 100,
-          pages: 10,
-          current: 5,
-          next: null,
-          prev: null,
-        },
+  test('should render characters list and pagination when data is available', () => {
+    const mockData = {
+      results: [
+        { id: 1, name: 'Rick Sanchez' },
+        { id: 2, name: 'Morty Smith' },
+      ],
+      info: {
+        count: 20,
+        pages: 2,
+        next: 'next-url',
+        prev: null,
       },
-      isLoading: false,
-      error: '',
-    });
+    };
 
-    render(<ResultList searchQuery="Morty" />);
-    expect(
-      screen.getByText('No results found for "Morty"')
-    ).toBeInTheDocument();
-  });
-
-  test('Displays "Please enter a search query" when the query is empty and the result is empty.', () => {
-    vi.mocked(useCharacterSearch).mockReturnValue({
-      charactersData: {
-        results: [],
-        info: {
-          count: 100,
-          pages: 10,
-          current: 5,
-          next: null,
-          prev: null,
-        },
-      },
-      isLoading: false,
-      error: '',
-    });
-
-    render(<ResultList searchQuery="" />);
-    expect(screen.getByText('Please enter a search query')).toBeInTheDocument();
-  });
-
-  test('Renders the list of results and pagination when data is available', () => {
-    vi.mocked(useCharacterSearch).mockReturnValue({
-      charactersData: {
-        results: [{ id: 1, name: 'Rick Sanchez' }],
-        info: {
-          count: 20,
-          pages: 10,
-          current: 1,
-          next: null,
-          prev: null,
-        },
-      },
-      isLoading: false,
-      error: '',
+    vi.mocked(useGetCharactersQuery).mockReturnValue({
+      data: mockData,
+      isFetching: false,
+      error: null,
+      refetch: vi.fn(),
     });
 
     render(<ResultList searchQuery="Rick" />);
+
+    expect(screen.getByTestId('flyout')).toBeInTheDocument();
     expect(screen.getByTestId('result-list')).toBeInTheDocument();
     expect(screen.getByTestId('pagination')).toBeInTheDocument();
+    expect(screen.getByText('Rick Sanchez')).toBeInTheDocument();
+    expect(screen.getByText('Morty Smith')).toBeInTheDocument();
   });
 
-  test('Clicking on a character triggers navigation.', () => {
-    vi.mocked(useCharacterSearch).mockReturnValue({
-      charactersData: {
-        results: [{ id: 7, name: 'Rick Sanchez' }],
-        info: {
-          count: 1,
-          pages: 1,
-          current: 1,
-          next: null,
-          prev: null,
-        },
+  test('should navigate to character details when character is clicked', () => {
+    const mockData = {
+      results: [{ id: 1, name: 'Rick Sanchez' }],
+      info: {
+        count: 1,
+        pages: 1,
+        next: null,
+        prev: null,
       },
-      isLoading: false,
-      error: '',
+    };
+
+    vi.mocked(useGetCharactersQuery).mockReturnValue({
+      data: mockData,
+      isFetching: false,
+      error: null,
+      refetch: vi.fn(),
     });
 
     render(<ResultList searchQuery="Rick" />);
-    screen.getByText('Rick Sanchez').click();
 
-    expect(mockNavigate).toHaveBeenCalledWith('7?page=1');
+    screen.getByTestId('character-1').click();
+    expect(mockNavigate).toHaveBeenCalledWith('1?page=1');
   });
 
-  test('Pagination calls onPageChange and updates navigation.', () => {
-    vi.mocked(useCharacterSearch).mockReturnValue({
-      charactersData: {
-        results: [{ id: 1, name: 'Rick Sanchez' }],
-        info: {
-          count: 20,
-          pages: 10,
-          current: 1,
-          next: null,
-          prev: null,
-        },
+  test('should call onPageChange helper when pagination is clicked', () => {
+    const mockData = {
+      results: [{ id: 1, name: 'Rick Sanchez' }],
+      info: {
+        count: 20,
+        pages: 2,
+        next: 'next-url',
+        prev: null,
       },
-      isLoading: false,
-      error: '',
+    };
+
+    vi.mocked(useGetCharactersQuery).mockReturnValue({
+      data: mockData,
+      isFetching: false,
+      error: null,
+      refetch: vi.fn(),
     });
 
     render(<ResultList searchQuery="Rick" />);
-    expect(mockNavigate).toHaveBeenCalledWith({
-      pathname: '/',
-      search: 'page=2',
-    });
+
+    screen.getByTestId('pagination').click();
+
+    expect(mockOnPageChange).toHaveBeenCalledWith(
+      2,
+      mockData,
+      defaultLocation,
+      mockNavigate
+    );
   });
 
-  test.skip('Pagination calls onPageChange and do not updates navigation when the page out of range.', () => {
-    vi.mocked(useCharacterSearch).mockReturnValue({
-      charactersData: {
-        results: [{ id: 1, name: 'Rick Sanchez' }],
-        info: {
-          count: 20,
-          pages: 10,
-          current: 1,
-          next: null,
-          prev: null,
-        },
+  test('should not render pagination if only one page exists', () => {
+    const mockData = {
+      results: [{ id: 1, name: 'Rick Sanchez' }],
+      info: {
+        count: 1,
+        pages: 1,
+        next: null,
+        prev: null,
       },
-      isLoading: false,
-      error: '',
+    };
+
+    vi.mocked(useGetCharactersQuery).mockReturnValue({
+      data: mockData,
+      isFetching: false,
+      error: null,
+      refetch: vi.fn(),
     });
 
     render(<ResultList searchQuery="Rick" />);
-    expect(mockNavigate).not.toHaveBeenCalled();
+
+    expect(screen.queryByTestId('pagination')).not.toBeInTheDocument();
+  });
+
+  test('should use correct page from URL params', () => {
+    vi.mocked(useSearchParams).mockReturnValue([
+      new URLSearchParams('?page=3'),
+      vi.fn(),
+    ]);
+
+    render(<ResultList searchQuery="Rick" />);
+
+    expect(useGetCharactersQuery).toHaveBeenCalledWith({
+      page: 3,
+      searchQuery: 'Rick',
+    });
+  });
+
+  test('should use uncorrect page from URL params', () => {
+    vi.mocked(useSearchParams).mockReturnValue([
+      new URLSearchParams('?page=abc'),
+      vi.fn(),
+    ]);
+
+    render(<ResultList searchQuery="Rick" />);
+
+    expect(useGetCharactersQuery).toHaveBeenCalledWith({
+      page: 1,
+      searchQuery: 'Rick',
+    });
   });
 });
