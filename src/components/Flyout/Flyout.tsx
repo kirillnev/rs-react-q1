@@ -34,7 +34,10 @@ const Flyout: React.FC = () => {
       <span>{`${selectedCharacters.length} items selected`}</span>
       <button onClick={handleUnselectAll}>Unselect all</button>
       {csvUrl && (
-        <a href={csvUrl} download="selected_characters.csv">
+        <a
+          href={csvUrl}
+          download={`${selectedCharacters.length}_characters.csv`}
+        >
           <button>Download all</button>
         </a>
       )}
