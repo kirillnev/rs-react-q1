@@ -21,3 +21,8 @@ export interface ApiResponse {
   };
   results: Character[];
 }
+
+export interface ThemeContextType {
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
+}

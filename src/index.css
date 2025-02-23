@@ -1,14 +1,53 @@
+:root {
+  --background-primary: #f5f5f5;
+  --background-secondary: #ffffff;
+  --border-color: #ddd;
+  --text-primary: #000000;
+  --text-secondary: #666666;
+  --hover-background: #efefef;
+  --button-primary: #007bff;
+  --button-primary-hover: #0056b3;
+  --button-danger: #dc3545;
+  --button-danger-hover: #c82333;
+  --error-color: #dc3545;
+  --spinner-background: #f3f3f3;
+  --spinner-foreground: #007bff;
+  --disabled-background: #f5f5f5;
+  --disabled-text: #999;
+  --input-focus: #007bff40;
+}
+
+.container.dark {
+  --background-primary: #1a1a1a;
+  --background-secondary: #2d2d2d;
+  --border-color: #404040;
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --hover-background: #3d3d3d;
+  --button-primary: #0d6efd;
+  --button-primary-hover: #0b5ed7;
+  --button-danger: #dc3545;
+  --button-danger-hover: #bb2d3b;
+  --error-color: #ff4d4d;
+  --spinner-background: #333333;
+  --spinner-foreground: #0d6efd;
+  --disabled-background: #404040;
+  --disabled-text: #808080;
+  --input-focus: #0d6efd40;
+}
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f5f5f5;
 }
 
 .container {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  background-color: var(--background-primary);
+  color: var(--text-primary);
 }
 
 header {
@@ -18,13 +57,13 @@ header {
 .content {
   min-height: 850px;
   display: flex;
-  border: 1px solid #ddd;
-  background-color: white;
+  border: 1px solid var(--border-color);
+  background-color: var(--background-secondary);
 }
 
 .result-list {
   flex: 1;
-  border-right: 1px solid #ddd;
+  border-right: 1px solid var(--border-color);
   padding: 20px;
   overflow-y: auto;
 }
@@ -40,10 +79,11 @@ header {
   align-items: center;
   position: relative;
   padding: 8px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--border-color);
 }
+
 .character-item:hover {
-  background-color: #efefef;
+  background-color: var(--hover-background);
 }
 
 .character-item input {
@@ -62,6 +102,7 @@ header {
   background: none;
   cursor: pointer;
   text-align: left;
+  color: var(--text-primary);
 }
 
 .detail-panel {
@@ -80,14 +121,22 @@ header {
 .search-container input {
   flex: 1;
   padding: 8px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   font-size: 16px;
+  background-color: var(--background-secondary);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.search-container input:focus {
+  border-color: var(--button-primary);
+  box-shadow: 0 0 0 3px var(--input-focus);
 }
 
 .search-container button {
   padding: 8px 16px;
-  background-color: #007bff;
+  background-color: var(--button-primary);
   color: white;
   border: none;
   border-radius: 4px;
@@ -95,7 +144,7 @@ header {
 }
 
 .search-container button:hover {
-  background-color: #0056b3;
+  background-color: var(--button-primary-hover);
 }
 
 .pagination {
@@ -108,26 +157,27 @@ header {
 
 .pagination-button {
   padding: 8px 16px;
-  border: 1px solid #ddd;
-  background-color: white;
+  border: 1px solid var(--border-color);
+  background-color: var(--background-secondary);
+  color: var(--text-primary);
   cursor: pointer;
   border-radius: 4px;
   min-width: 100px;
 }
 
 .pagination-button:disabled {
-  background-color: #f5f5f5;
+  background-color: var(--disabled-background);
   cursor: not-allowed;
-  color: #999;
+  color: var(--disabled-text);
 }
 
 .pagination-button:not(:disabled):hover {
-  background-color: #f0f0f0;
+  background-color: var(--hover-background);
 }
 
 .pagination-info {
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .detail-container {
@@ -140,7 +190,7 @@ header {
   top: 0;
   right: 0;
   padding: 8px 16px;
-  background-color: #dc3545;
+  background-color: var(--button-danger);
   color: white;
   border: none;
   border-radius: 4px;
@@ -148,11 +198,11 @@ header {
 }
 
 .close-button:hover {
-  background-color: #c82333;
+  background-color: var(--button-danger-hover);
 }
 
 .error {
-  color: #dc3545;
+  color: var(--error-color);
   padding: 20px;
   text-align: center;
 }
@@ -160,7 +210,7 @@ header {
 .error-boundary {
   padding: 40px;
   text-align: center;
-  color: #dc3545;
+  color: var(--error-color);
 }
 
 .not-found {
@@ -178,8 +228,8 @@ header {
 .spinner-inner {
   width: 40px;
   height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #007bff;
+  border: 4px solid var(--spinner-background);
+  border-top: 4px solid var(--spinner-foreground);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -208,8 +258,8 @@ header {
   bottom: 0;
   left: 0;
   right: 0;
-  background: #f5f5f5;
-  border-top: 1px solid #ccc;
+  background: var(--background-primary);
+  border-top: 1px solid var(--border-color);
   padding: 10px;
   display: flex;
   justify-content: flex-start;
